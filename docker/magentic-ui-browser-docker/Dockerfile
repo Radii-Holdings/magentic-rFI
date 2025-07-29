@@ -55,6 +55,8 @@ COPY openbox-rc.xml /root/.config/openbox/rc.xml
 EXPOSE 6080 37367
 
 ENV PLAYWRIGHT_WS_PATH="default"
+ENV NO_VNC_PORT=6080
+ENV PLAYWRIGHT_PORT=37367
 
 # Set the display environment variable
 ENV DISPLAY=:99
