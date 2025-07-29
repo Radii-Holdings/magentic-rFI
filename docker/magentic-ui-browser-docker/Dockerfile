@@ -42,6 +42,7 @@ COPY docker/magentic-ui-browser-docker/supervisord.conf /etc/supervisor/conf.d/s
 COPY docker/magentic-ui-browser-docker/start.sh /app/start.sh
 COPY docker/magentic-ui-browser-docker/playwright-server.js /app/playwright-server.js
 COPY docker/magentic-ui-browser-docker/x11-setup.sh /app/x11-setup.sh
+RUN sed -i 's/\r$//' /app/start.sh /app/x11-setup.sh
 
 # Make scripts executable
 RUN chmod +x /app/start.sh /app/x11-setup.sh
@@ -62,7 +63,7 @@ RUN mkdir -p /workspace
 WORKDIR /workspace
 
 COPY docker/magentic-ui-browser-docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh && chmod +x /usr/local/bin/entrypoint.sh
 
 LABEL org.opencontainers.image.source=https://github.com/Radii-Holdings/magentic-rFI
 LABEL org.opencontainers.image.description="Magentic UI Browser Docker container with Playwright and noVNC{Modified} particularly for financial data mining and analysis."
