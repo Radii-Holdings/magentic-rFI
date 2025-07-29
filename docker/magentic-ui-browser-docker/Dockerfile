@@ -29,19 +29,19 @@ RUN git clone --depth 1 --branch v1.6.0 https://github.com/novnc/noVNC.git /usr/
 WORKDIR /app
 
 # Install Playwright
-COPY docker/magentic-ui-browser-docker/package.json package-lock.json* ./
+COPY package.json package-lock.json* ./
 RUN npm install .
 
 # Install browsers with dependencies
 RUN npx playwright@1.51 install --with-deps chromium
 
 # Set up supervisord configuration
-COPY docker/magentic-ui-browser-docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy scripts
-COPY docker/magentic-ui-browser-docker/start.sh /app/start.sh
-COPY docker/magentic-ui-browser-docker/playwright-server.js /app/playwright-server.js
-COPY docker/magentic-ui-browser-docker/x11-setup.sh /app/x11-setup.sh
+COPY start.sh /app/start.sh
+COPY playwright-server.js /app/playwright-server.js
+COPY x11-setup.sh /app/x11-setup.sh
 RUN sed -i 's/\r$//' /app/start.sh /app/x11-setup.sh
 
 # Make scripts executable
@@ -49,7 +49,7 @@ RUN chmod +x /app/start.sh /app/x11-setup.sh
 
 # Create a simple openbox configuration to only show the browser window
 RUN mkdir -p /root/.config/openbox
-COPY docker/magentic-ui-browser-docker/openbox-rc.xml /root/.config/openbox/rc.xml
+COPY openbox-rc.xml /root/.config/openbox/rc.xml
 
 # Expose ports: noVNC web interface, and Playwright server
 EXPOSE 6080 37367
@@ -62,7 +62,7 @@ ENV DISPLAY=:99
 RUN mkdir -p /workspace
 WORKDIR /workspace
 
-COPY docker/magentic-ui-browser-docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh && chmod +x /usr/local/bin/entrypoint.sh
 
 LABEL org.opencontainers.image.source=https://github.com/Radii-Holdings/magentic-rFI

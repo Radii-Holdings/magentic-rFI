@@ -17,7 +17,7 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Install Python packages
-COPY docker/magentic-ui-python-env/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Final stage
@@ -40,7 +40,7 @@ ENV PYTHONUNBUFFERED=1
 RUN mkdir -p /workspace
 WORKDIR /workspace
 
-COPY docker/magentic-ui-python-env/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 LABEL org.opencontainers.image.source=https://github.com/Radii-Holdings/magentic-rFI

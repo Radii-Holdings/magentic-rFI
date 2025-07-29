@@ -1,8 +1,8 @@
 #!/bin/bash
 
-IMAGE_NAME=magentic-ui-python-env
+IMAGE_NAME=magentic-rfi-python-env
 IMAGE_VERSION=0.0.1
-REGISTRY=ghcr.io/microsoft
+REGISTRY=ghcr.io/radiiHoldings
 
 # Check if --push flag is provided or PUSH environment variable is set
 PUSH_FLAG=""
