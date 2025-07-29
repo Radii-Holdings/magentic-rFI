@@ -29,26 +29,26 @@ RUN git clone --depth 1 --branch v1.6.0 https://github.com/novnc/noVNC.git /usr/
 WORKDIR /app
 
 # Install Playwright
-COPY package.json package-lock.json* ./
+COPY docker/magentic-ui-browser-docker/package.json package-lock.json* ./
 RUN npm install .
 
 # Install browsers with dependencies
 RUN npx playwright@1.51 install --with-deps chromium
 
 # Set up supervisord configuration
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/magentic-ui-browser-docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy scripts
-COPY start.sh /app/start.sh
-COPY playwright-server.js /app/playwright-server.js
-COPY x11-setup.sh /app/x11-setup.sh
+COPY docker/magentic-ui-browser-docker/start.sh /app/start.sh
+COPY docker/magentic-ui-browser-docker/playwright-server.js /app/playwright-server.js
+COPY docker/magentic-ui-browser-docker/x11-setup.sh /app/x11-setup.sh
 
 # Make scripts executable
 RUN chmod +x /app/start.sh /app/x11-setup.sh
 
 # Create a simple openbox configuration to only show the browser window
 RUN mkdir -p /root/.config/openbox
-COPY openbox-rc.xml /root/.config/openbox/rc.xml
+COPY docker/magentic-ui-browser-docker/openbox-rc.xml /root/.config/openbox/rc.xml
 
 # Expose ports: noVNC web interface, and Playwright server
 EXPOSE 6080 37367
@@ -61,12 +61,12 @@ ENV DISPLAY=:99
 RUN mkdir -p /workspace
 WORKDIR /workspace
 
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY docker/magentic-ui-browser-docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-LABEL org.opencontainers.image.source=https://github.com/microsoft/magentic-ui
-LABEL org.opencontainers.image.description="Magentic UI Browser Docker container with Playwright and noVNC"
-LABEL org.opencontainers.image.licenses=MIT
+LABEL org.opencontainers.image.source=https://github.com/Radii-Holdings/magentic-rFI
+LABEL org.opencontainers.image.description="Magentic UI Browser Docker container with Playwright and noVNC{Modified} particularly for financial data mining and analysis."
+LABEL org.opencontainers.image.licenses=CLOSED
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 

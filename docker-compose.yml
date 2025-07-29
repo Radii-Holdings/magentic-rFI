@@ -1,9 +1,8 @@
-version: '3.9'
 services:
-  magentic-ui:
+  magentic-rfi-ui-browser:
     build:
       context: .
-      dockerfile: docker/magentic-ui-python-env/Dockerfile
+      dockerfile: docker/magentic-ui-browser-docker/Dockerfile
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       APP_USERNAME: ${APP_USERNAME}
