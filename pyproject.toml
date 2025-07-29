@@ -48,6 +48,7 @@ dependencies = [
     "pyyaml",
     "html2text",
     "psutil",
+    "passlib",
 ]
 
 [project.urls]

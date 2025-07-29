@@ -8,6 +8,8 @@ from typing import AsyncGenerator, Any
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.sessions import SessionMiddleware
+from fastapi.responses import RedirectResponse
 from loguru import logger
 
 from ...version import VERSION
@@ -23,6 +25,7 @@ from .routes import (
     validation,
     ws,
 )
+from .auth import routes as auth_routes
 
 # Initialize application
 app_file_path = os.path.dirname(os.path.abspath(__file__))
@@ -81,6 +84,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
 # Create FastAPI application
 app = FastAPI(lifespan=lifespan, debug=True)
+app.add_middleware(SessionMiddleware, secret_key=os.environ.get("SESSION_SECRET", "secret"))
 
 # CORS middleware configuration
 app.add_middleware(
@@ -95,6 +99,21 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def auth_middleware(request: Request, call_next):
+    allowed_paths = [
+        "/login",
+        "/auth/login",
+        "/auth/logout",
+    ]
+    if request.url.path.startswith("/api") or request.url.path.startswith("/files"):
+        return await call_next(request)
+    if request.url.path not in allowed_paths and not request.session.get("user"):
+        return RedirectResponse(url="/login")
+    response = await call_next(request)
+    return response
 
 # Create API router with version and documentation
 api = FastAPI(
@@ -153,6 +172,13 @@ api.include_router(
     settingsroute.router,
     prefix="/settings",
     tags=["settings"],
+    responses={404: {"description": "Not found"}},
+)
+
+api.include_router(
+    auth_routes.router,
+    prefix="/auth",
+    tags=["auth"],
     responses={404: {"description": "Not found"}},
 )
 

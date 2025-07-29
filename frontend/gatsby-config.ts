@@ -53,6 +53,12 @@ const config: GatsbyConfig = {
       },
       __key: "pages",
     },
+    {
+      resolve: "gatsby-plugin-page-creator",
+      options: {
+        path: `${__dirname}/src/auth/pages`,
+      },
+    },
   ],
 };
 
