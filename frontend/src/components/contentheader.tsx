@@ -3,7 +3,7 @@ import { PanelLeftClose, PanelLeftOpen, Plus } from "lucide-react";
 import { Tooltip } from "antd";
 import { appContext } from "../hooks/provider";
 import { useConfigStore } from "../hooks/store";
-import { Settings } from "lucide-react";
+import { Settings, LogOut } from "lucide-react";
 import SignInModal from "./signin";
 import SettingsModal from "./settings/SettingsModal";
 import logo from "../assets/logo.svg";
@@ -22,7 +22,7 @@ const ContentHeader = ({
   onToggleSidebar,
   onNewSession,
 }: ContentHeaderProps) => {
-  const { user } = React.useContext(appContext);
+  const { user, logout } = React.useContext(appContext);
   useConfigStore();
   const [isEmailModalOpen, setIsEmailModalOpen] = React.useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
@@ -103,6 +103,18 @@ const ContentHeader = ({
                 onClick={() => setIsSettingsOpen(true)}
                 className="!px-0 transition-colors hover:text-accent"
                 aria-label="Settings"
+              />
+            </Tooltip>
+          </div>
+          <div className="text-primary">
+            <Tooltip title="Logout">
+              <Button
+                variant="tertiary"
+                size="sm"
+                icon={<LogOut className="h-8 w-8" />}
+                onClick={logout}
+                className="!px-0 transition-colors hover:text-accent"
+                aria-label="Logout"
               />
             </Tooltip>
           </div>

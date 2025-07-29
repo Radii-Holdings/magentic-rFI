@@ -30,11 +30,16 @@ const Provider = ({ children }: any) => {
     storedValue === null ? "dark" : storedValue === "dark" ? "dark" : "light"
   );
 
-  const logout = () => {
-    // setUser(null);
-    // eraseCookie(cookie_name);
-    console.log("Please implement your own logout logic");
-    message.info("Please implement your own logout logic");
+  const logout = async () => {
+    try {
+      await fetch("/auth/logout", { method: "POST" });
+    } catch (e) {
+      console.error(e);
+    }
+    setUser(null);
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
   };
 
   const updateDarkMode = (darkMode: string) => {
@@ -52,6 +57,8 @@ const Provider = ({ children }: any) => {
   const setUser = (user: IUser | null) => {
     if (user?.email) {
       setLocalStorage("user_email", user.email, false);
+    } else if (typeof window !== "undefined") {
+      window.localStorage.removeItem("user_email");
     }
     setUserState(user);
   };

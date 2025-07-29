@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  magentic-ui:
+    build:
+      context: .
+      dockerfile: docker/magentic-ui-python-env/Dockerfile
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      APP_USERNAME: ${APP_USERNAME}
+      APP_PASSWORD: ${APP_PASSWORD}
+      SESSION_SECRET: ${SESSION_SECRET:-changeme}
+    volumes:
+      - .:/workspace
+    ports:
+      - "8081:8081"
+    command: magentic-ui --host 0.0.0.0 --port 8081
