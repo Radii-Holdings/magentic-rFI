@@ -64,8 +64,9 @@ pip install magentic-ui[azure]
 pip install magentic-ui[ollama]
 ```
 
-For further details on installation please read the   <a href="#️-installation">🛠️ Installation</a> section. For common installation issues and their solutions, please refer to the [troubleshooting document](TROUBLESHOOTING.md). See advanced usage instructions with the command `magentic-ui --help`. 
+You can then pass a config file to the `magentic-ui` command (<a href="#model-client-configuration"> client config</a>) or change the model client inside the UI settings.
 
+For further details on installation please read the   <a href="#️-installation">🛠️ Installation</a> section. For common installation issues and their solutions, please refer to the [troubleshooting document](TROUBLESHOOTING.md). See advanced usage instructions with the command `magentic-ui --help`. 
 
 ## Quick Navigation:
 <p align="center">
@@ -117,6 +118,7 @@ What differentiates Magentic-UI from other browser use offerings is its transpar
   ▶️ <em> Click to watch a video and learn more about Magentic-UI </em>
 </div>
 
+
 ### Autonomous Evaluation
 
 To evaluate its autonomous capabilities, Magentic-UI has been tested against several benchmarks when running with o4-mini: [GAIA](https://huggingface.co/datasets/gaia-benchmark/GAIA) test set (42.52%), which assesses general AI assistants across reasoning, tool use, and web interaction tasks ; [AssistantBench](https://huggingface.co/AssistantBench) test set (27.60%), focusing on realistic, time-consuming web tasks; [WebVoyager](https://github.com/MinorJerry/WebVoyager) (82.2%), measuring end-to-end web navigation in real-world scenarios; and [WebGames](https://webgames.convergence.ai/) (45.5%), evaluating general-purpose web-browsing agents through interactive challenges.
@@ -124,7 +126,8 @@ To reproduce these experimental results, please see the following [instructions]
 
 
 
-If you're interested in reading more checkout our [blog post](https://www.microsoft.com/en-us/research/blog/magentic-ui-an-experimental-human-centered-web-agent/).
+If you're interested in reading more checkout our [technical report](https://www.microsoft.com/en-us/research/wp-content/uploads/2025/07/magentic-ui-report.pdf) and [blog post](https://www.microsoft.com/en-us/research/blog/magentic-ui-an-experimental-human-centered-web-agent/).
+
 
 ## 🛠️ Installation
 ### Pre-Requisites
@@ -139,7 +142,7 @@ If using Docker Desktop, make sure it is set up to use WSL2:
 
 
 
-2. During the Installation step, you will need to set up your `OPENAI_API_KEY`. To use other models, review the [Custom Client Configuration](#configuration) section below.
+2. During the Installation step, you will need to set up your `OPENAI_API_KEY`. To use other models, review the [Model Client Configuration](#model-client-configuration) section below.
 
 3. You need at least [Python 3.10](https://www.python.org/downloads/) installed.
 
@@ -190,8 +193,31 @@ Once the server is running, you can access the UI at <http://localhost:8081>.
 
 #### Model Client Configuration
 
-If you want to use a different OpenAI key, or if you want to configure use with Azure OpenAI or Ollama, you can do so inside the UI by navigating to settings (top right icon) and changing model configuration.
+If you want to use a different OpenAI key, or if you want to configure use with Azure OpenAI or Ollama, you can do so inside the UI by navigating to settings (top right icon) and changing model configuration. Another option is to pass a yaml config file when you start Magentic-UI which will override any settings in the UI:
 
+```bash
+magentic-ui --port 8081 --config config.yaml
+```
+
+Where the `config.yaml` should look as follows with an AutoGen model client configuration:
+
+```yaml
+gpt4o_client: &gpt4o_client
+    provider: OpenAIChatCompletionClient
+    config:
+      model: gpt-4o-2024-08-06
+      api_key: null
+      base_url: null
+      max_retries: 5
+
+orchestrator_client: *gpt4o_client
+coder_client: *gpt4o_client
+web_surfer_client: *gpt4o_client
+file_surfer_client: *gpt4o_client
+action_guard_client: *gpt4o_client
+plan_learning_client: *gpt4o_client
+```
+You can change the client for each of the agents using the config file and use AzureOpenAI (`AzureOpenAIChatCompletionClient`), Ollama and other clients.
 
 #### MCP Server Configuration
 
@@ -323,6 +349,20 @@ This project welcomes contributions and suggestions. For information about contr
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information, see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
+
+## Citation
+
+Please cite our paper if you use our work in your research:
+
+```
+@article{mozannar2025magentic,
+  title={Magentic-UI: Towards Human-in-the-loop Agentic Systems},
+  author={Mozannar, Hussein and Bansal, Gagan and Tan, Cheng and Fourney, Adam and Dibia, Victor and Chen, Jingya and Gerrits, Jack and Payne, Tyler and Maldaner, Matheus Kunzler and Grunde-McLaughlin, Madeleine and others},
+  journal={arXiv preprint arXiv:2507.22358},
+  year={2025}
+}
+```
+
 ## License
 
 Microsoft, and any contributors, grant you a license to any code in the repository under the [MIT License](https://opensource.org/licenses/MIT). See the [LICENSE](LICENSE) file.
@@ -337,3 +377,4 @@ Any use of third-party trademarks or logos are subject to those third-party's po
 Privacy information can be found at <https://go.microsoft.com/fwlink/?LinkId=521839>
 
 Microsoft and any contributors reserve all other rights, whether under their respective copyrights, patents, or trademarks, whether by implication, estoppel, or otherwise.
+
